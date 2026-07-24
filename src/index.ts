@@ -9,7 +9,27 @@ interface SubagentDetails {
   errorMessage?: string;
 }
 
+function formatSubagents(cwd: string): string {
+  const agents = discoverAgents(cwd).agents;
+  const settings = readSettings();
+  if (!agents.length) return "No subagents loaded.";
+
+  return agents
+    .map(
+      (agent) =>
+        `- [${agent.model ?? settings.model ?? "(default)"}:${agent.thinking ?? "(default)"}] ${agent.name}: ${agent.description}`,
+    )
+    .join("\n");
+}
+
 export default function (pi: ExtensionAPI) {
+  pi.registerCommand("subagents", {
+    description: "List loaded subagents and their model settings.",
+    handler: async (_args, ctx) => {
+      ctx.ui.notify(formatSubagents(ctx.cwd), "info");
+    },
+  });
+
   pi.on("session_start", (_event, ctx) => {
     const agents = discoverAgents(ctx.cwd).agents;
     const parameters = Type.Object({

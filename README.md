@@ -14,6 +14,8 @@ Built to keep parent context lean on local-LLM setups where the main session has
 
 Only the child's final assistant text is returned to the parent. Everything the child thought, called, and read stays in the child's process.
 
+Use `/subagents` to list each loaded role with its description, model, and thinking level.
+
 ## Install
 
 From npm (recommended):

@@ -3,19 +3,25 @@ import test from "node:test";
 import register from "./index.ts";
 import { makeTempAgentDir, writeAgentFile } from "./test-helpers.js";
 
-test("default export registers a cwd-aware subagent tool", () => {
+test("default export registers a cwd-aware subagent tool and command", async () => {
   const temp = makeTempAgentDir();
   try {
     writeAgentFile(temp.agentsDir, "scout.md", {
       name: "scout",
       description: "fast reconnaissance",
+      model: "qwen-coder:latest",
+      thinking: "off",
     });
 
     let registered = null;
+    let registeredCommand = null;
     let beforeAgentStart = null;
     const fakePi = {
       registerTool(def) {
         registered = def;
+      },
+      registerCommand(name, options) {
+        registeredCommand = { name, ...options };
       },
       on(event, handler) {
         if (event === "session_start") handler({}, { cwd: process.cwd() });
@@ -30,6 +36,16 @@ test("default export registers a cwd-aware subagent tool", () => {
     assert.equal(typeof registered.description, "string");
     assert.ok(registered.description.length > 0);
     assert.equal(typeof registered.execute, "function");
+
+    assert.ok(registeredCommand, "subagents command was not registered");
+    assert.equal(registeredCommand.name, "subagents");
+    assert.equal(typeof registeredCommand.handler, "function");
+    let commandOutput = null;
+    await registeredCommand.handler("", {
+      cwd: process.cwd(),
+      ui: { notify(text) { commandOutput = text; } },
+    });
+    assert.equal(commandOutput, "- [qwen-coder:latest:off] scout: fast reconnaissance");
 
     const schema = registered.parameters;
     assert.equal(schema.type, "object");
