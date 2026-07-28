@@ -21,7 +21,7 @@ Use `/subagents` to list each loaded role with its description, model, and think
 From GitHub:
 
 ```bash
-pi install github:ongspxm/pi-subagent
+pi install git:github.com/ongspxm/pi-subagent
 ```
 
 From a local checkout:
