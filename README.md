@@ -21,12 +21,12 @@ Use `/subagents` to list each loaded role with its description, model, and think
 From npm (recommended):
 
 ```bash
-pi install @marks/pi-subagent
+pi install @ongspxm/pi-subagents
 mkdir -p ~/.pi/agent/agents
-cp node_modules/@marks/pi-subagent/agents/*.md ~/.pi/agent/agents/
+cp node_modules/@ongspxm/pi-subagents/agents/*.md ~/.pi/agent/agents/
 ```
 
-The package ships the role markdowns in `agents/` inside `node_modules/@marks/pi-subagent/`. Copy or symlink them into `~/.pi/agent/agents/` so Pi can find them — that location is where roles are resolved from.
+The package ships the role markdowns in `agents/` inside `node_modules/@ongspxm/pi-subagents/`. Copy or symlink them into `~/.pi/agent/agents/` so Pi can find them — that location is where roles are resolved from.
 
 From a local checkout (for development):
 
